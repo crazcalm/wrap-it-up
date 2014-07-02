@@ -78,4 +78,3 @@ def list_subreddit_submissions(subreddit, criteria):
     data = response.json()
     children = data['data']['children']
     return children
-

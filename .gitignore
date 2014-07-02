@@ -1,6 +1,7 @@
-/reddit.py~
+/*py~
 bin/*
 lib/*
 share/*
 /README.txt~
-/reddit_py/setup.py~
+/*/*.py~
+/*/__pycache__/
