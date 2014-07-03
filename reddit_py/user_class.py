@@ -1,3 +1,5 @@
+__author__ = "crazcalm"
+
 import accounts, users, subreddits
 import getpass
 
@@ -8,7 +10,7 @@ class User:
         self.password = password
 
     def login(self):
-        return accounts.user_login(self.username, self.password)
+        return accounts.user_login(self.username, self.password, "foo.py")
 
     def __repr__(self):
         return self.__str__()

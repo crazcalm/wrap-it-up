@@ -1,6 +1,9 @@
 __author__ = 'idclark'
 import requests as r
+import user_class
 
+from operator import itemgetter
+from itertools import groupby
 
 def about_subreddit(sr):
     """get an overview for a given subreddit
@@ -63,7 +66,7 @@ def subreddits_by_rank(criteria, limit=3):
     return response.json()['data']['children']
 
 
-def list_subreddit_submissions(subreddit, criteria):
+def list_subreddit_submissions(client, subreddit, criteria):
     """
     for a given subreddit, return a list of articles, sorted by the given criteria:
     hot, new, random
@@ -74,7 +77,21 @@ def list_subreddit_submissions(subreddit, criteria):
     if criteria not in criteria_choices:
         raise Exception('Please enter a valid criteria choice')
     url = r'http://www.reddit.com/r/{s}/{c}.json'.format(s=subreddit, c=criteria)
-    response = r.get(url)
+    response = client.get(url)
     data = response.json()
     children = data['data']['children']
     return children
+
+if __name__ == "__main__":
+    user = user_class.initialize_user()
+    client = user.login()
+    python_subs = list_subreddit_submissions(client, 'python', 'hot')
+    print(type(python_subs))
+
+    python_subs = [item["data"] for item in python_subs]
+
+    python_subs.sort(key=itemgetter('author'))
+    for author, items in groupby(python_subs, key=itemgetter("author")):
+        print(author)
+        for i in items:
+            print("    ", i)

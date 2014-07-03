@@ -1,5 +1,6 @@
 __author__ = 'idclark'
 import requests
+import user_class
 
 
 def user_login(user_name, password, bot_desc):
@@ -87,6 +88,8 @@ def user_name_available(name):
     response = requests.get(r'http://www.reddit.com/api/username_available.json', data=data)
     return response.content
 
-
-
-
+if __name__ == "__main__":
+    user = user_class.User("crazcalm", "3dKXw24Hv4")
+    client = user.login()
+    overview = current_account_overview(client)
+    print(overview)
