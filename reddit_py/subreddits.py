@@ -2,14 +2,10 @@ __author__ = 'idclark'
 import requests as r
 import user_class
 
-from operator import itemgetter
-from itertools import groupby
-
 def about_subreddit(sr):
     """get an overview for a given subreddit
        > running = about_subreddit('running')
     """
-
     url = r'http://www.reddit.com/r/{sr}/about.json'.format(sr=sr)
     response = r.get(url)
     return response.json()['data']
@@ -27,7 +23,7 @@ def my_subreddits(client, status, limit):
     url = r'http://www.reddit.com/subreddits/mine/{st}.json'.format(st=status)
     data = {'limit': limit}
     response = client.get(url, data=data)
-    return response.json()['data']
+    return response.json()['data']["children"]
 
 
 #TODO this returns 404 ??
@@ -37,23 +33,23 @@ def recommend_subreddits(srnames, omit):
     omit: subreddits to ommit from the reccommendation
     """
     data = {'srnames': ",".join(srnames), 'omit': ",".join(omit)}
-    url = r'http://www.reddit.com/api/subreddit_recommendations'
+    url = r'http://www.reddit.com/api/subreddit_recommendations/sr'
     response = r.get(url, data=data)
     return response.content
 
 
 #TODO this returns an empty list...
-def search_by_topic(query):
+def search_by_topic(client, query):
     """
     search subreddits by inputting a given topic
     """
     data = {'query': str(query)}
     url = r'http://www.reddit.com/api/subreddits_by_topic.json'
-    response = r.get(url, data=data)
-    return response.json()['data']
+    response = client.get(url, data=data)
+    return response.json()
 
 
-def subreddits_by_rank(criteria, limit=3):
+def subreddits_by_rank(client, criteria, limit=3):
     """
     returns list of subreddits according to given criteria
     criteria: popular, new, banned
@@ -62,7 +58,7 @@ def subreddits_by_rank(criteria, limit=3):
     """
     data = {'limit': limit}
     url = r'http://www.reddit.com/subreddits/{c}.json'.format(c=criteria)
-    response = r.get(url, data=data)
+    response = client.get(url, data=data)
     return response.json()['data']['children']
 
 
@@ -81,17 +77,3 @@ def list_subreddit_submissions(client, subreddit, criteria):
     data = response.json()
     children = data['data']['children']
     return children
-
-if __name__ == "__main__":
-    user = user_class.initialize_user()
-    client = user.login()
-    python_subs = list_subreddit_submissions(client, 'python', 'hot')
-    print(type(python_subs))
-
-    python_subs = [item["data"] for item in python_subs]
-
-    python_subs.sort(key=itemgetter('author'))
-    for author, items in groupby(python_subs, key=itemgetter("author")):
-        print(author)
-        for i in items:
-            print("    ", i)
