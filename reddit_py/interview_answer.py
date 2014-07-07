@@ -1,3 +1,5 @@
+__author__ = "crazcalm"
+
 import subreddits, user_class, sort_reddits
 from itertools import groupby
 from operator import itemgetter
