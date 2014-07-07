@@ -3,9 +3,7 @@ __author__ = "crazcalm"
 from operator import itemgetter
 from itertools import groupby
 
-#    python_subs = [item["data"] for item in python_subs]
-
-def format_my_subreddits(response):
+def content_in_list(response):
     """
     Returns a list of the content (in dictionary form) from the response.
     """
