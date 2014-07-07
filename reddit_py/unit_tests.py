@@ -1,3 +1,5 @@
+__author__= "crazcalm"
+
 import unittest
 from sort_reddits import content_in_list, sort_by_key
 from user_class import User
